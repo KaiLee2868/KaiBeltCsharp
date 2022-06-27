@@ -1,0 +1,82 @@
+<a href="/logout" style="text-decoration:underline">Logout</a>
+<h1>Dojo Meet up Center</h1>
+
+
+
+<h4>Welcome @ViewBag.CurrentUser.Name</h4>
+
+<a href="/meetups/new/@ViewBag.CurrentUser.UserId"><button class="btn btn-info">Add New Activity</button></a>
+
+@{
+    bool isAttending = false;
+}
+
+@{
+    <table class="table table-striped">
+    <tr>
+        <th>Meet up</th>
+        <th>Date and Time</th>
+        <th>Duration</th>
+        <th>Event Coordinator</th>
+        <th>No. of Participants</th>
+        <th>Actions</th>
+    </tr>
+   
+    @foreach(var i in ViewBag.AllMeeting)
+    {
+    <tr>
+    <td style="text-decoration:underline"><a href="/meetup/@i.MeetId">@i.Title</a></td>
+    <td>@i.DateandTime.ToString("M/d") @@ @i.DateandTime.ToString("h:mmtt")</td>
+    <td>@i.Duration @i.DurationStyle</td>
+    @if (ViewBag.username != null)
+                    {
+                        @foreach (var u in ViewBag.username)
+                        {
+                            @if (i.UserId == u.UserId)
+                            {
+                                <td>@u.Name</td>
+                            }
+                        }
+                    }    
+    
+    <td>@i.Guests.Count</td>
+    <td style="text-decoration:underline">
+     
+        @if(ViewBag.CurrentUser.UserId == i.Creator.UserId)
+        {
+        <a href="/delete/@i.MeetId">Delete</a> 
+        }
+
+        else
+        {
+            
+        
+            foreach(var x in i.Guests)
+            {
+                if(x.UserId == ViewBag.CurrentUser.UserId)
+                {
+                    isAttending = true;
+                }
+            
+            }
+            if(isAttending == true)
+                {
+                    <a href="/leave/@i.MeetId">Leave</a>
+                    isAttending = false;  
+                }
+
+            else if(isAttending == false)
+                {
+                    <a href="/join/@i.MeetId">Join</a>
+                }        
+            
+        }
+        
+        
+    </td>
+    </tr>
+    }
+    
+    </table>
+
+}

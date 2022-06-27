@@ -1,0 +1,49 @@
+<a href="/dashboard" style="text-decoration:underline">Dashboard</a>
+<a href="/logout" style="text-decoration:underline">Logout</a>
+
+<h1>@ViewBag.PlannedMeets.Title</h1>
+<h4 class="text-info">Event Coordinator : @ViewBag.Coordinator.Name</h4>
+<br>
+<h4>Description</h4>
+<p class="text-info">@ViewBag.des.Description</p>
+<h3>Participants:</h3>
+@{
+    foreach (var i in ViewBag.AllGuests)
+    {
+        <p class="text-success">@i.Guest.Name</p>
+    }
+}
+
+
+@{
+    bool isAttending = false;
+}
+
+@if (ViewBag.PlannedMeets.UserId == ViewBag.CurrentUser.UserId)
+{
+    <button type="button"  class="btn btn-warning btn-lg" style="user-select: auto;"><a href="/delete/@ViewBag.PlannedMeets.MeetId" style="color:black ;">Delete</a></button>
+}
+
+else
+{
+
+    @foreach (var x in ViewBag.AllGuests)
+    {
+        if (x.UserId == ViewBag.CurrentUser.UserId)
+        {
+            isAttending = true;
+        }
+
+    }
+    if (isAttending == true)
+    {
+        <button type="button"  class="btn btn-info btn-lg" style="user-select: auto;"><a href="/leave/@ViewBag.PlannedMeets.MeetId" style="color:white ;">Leave</a></button>
+        isAttending = false;
+    }
+
+    else if (isAttending == false)
+    {
+       <button  type="button"  class="btn btn-info btn-lg" style="user-select: auto;"><a href="/join/@ViewBag.PlannedMeets.MeetId" style="color:white ;">Join</a></button>
+    }
+
+}
